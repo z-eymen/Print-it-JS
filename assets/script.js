@@ -31,16 +31,18 @@ const slides = [
 	}
 ]
 
-//Calcul du nombre d'élements pour le slider
-let numberElement = slides.length -1; 
+// Les variables nécessaires pour le carrousel
 
-//Position de départ du slider
-let numDot = 0; 
+//Calculer de nombre d'élements pour le carrousel
+let totalSlides = slides.length -1; 
+
+//Position de départ du carrousel
+let totalDot = 0; 
 
 //Emplacement des images
 let srcImage = "./assets/images/slideshow/";
 
-//On pointe sur les élements suivants
+//On definit les éléments de carrousel
 const bannerImg  = document.querySelector(".banner-img");
 const bannerText = document.querySelector(".banner-text");
 const arrowLeft  = document.querySelector(".arrow_left");
@@ -51,8 +53,8 @@ const dots 		 = document.querySelector(".dots");
 arrowLeft.classList.remove("hidden");
 arrowRight.classList.remove("hidden");
 
-//Mise en Place des Pointes de sélection
-for(let pas = 0; pas <= numberElement; pas++) {
+//Mise en Place des dots de sélection
+for(let pas = 0; pas <= totalSlides; pas++) {
 	dots.innerHTML += '<span id="dot' + pas + '"class = "dot" title = "Image' + (pas + 1) +'" ></span>';
 }
 
@@ -60,12 +62,12 @@ for(let pas = 0; pas <= numberElement; pas++) {
 //On place dans une liste tous les élements ayant la class dot
 const dotList = document.querySelectorAll(".dot");
 /*
-On met en place un cercle plein pour le point qui est actif 
-et on repasse à un cercle vide pour les autres points
+On crée un cercle plein pour le point qui est actif 
+et on vide aux cercles  pour les autres points
 */
 const addSelected = () => {
-	for(let pas = 0; pas <= numberElement; pas++ ) {
-		if ( pas === numDot) {
+	for(let pas = 0; pas <= totalSlides; pas++ ) {
+		if ( pas === totalDot) {
 			dotList[pas].classList.add("dot_selected");
 		}else{
 			dotList[pas].classList.remove("dot_selected");
@@ -84,41 +86,41 @@ const updateSlider = (arg) => {
 
 
 //Mise en place de l'image de départ du slider avec le texte
-updateSlider(numDot);
+updateSlider(totalDot);
 
 /*
-on récupère l'id qui est dans target dans la liste des élements "dot"
-et on ne prend que la valeur finale qui est le numero du dot
+Dans la liste des éléments "dot", nous obtenons l'identifiant trouvé 
+dans la target et obtenons uniquement la dernière valeur qui est le numéro du "dot".
 */
 
 dots.addEventListener("click", (e) => {
 	if (e.target.id != "" && e.target.id != null ) {
-		numDot = parseInt(e.target.id.substring(3));
+		totalDot = parseInt(e.target.id.substring(3));
 	}
-	updateSlider(numDot);
+	updateSlider(totalDot);
 });
 
-//Controle de la flèche  gauche
+// Passer au slide précédente avec la flèche
 
 arrowLeft.addEventListener("click", () => {
-	if (numDot <= 0 ) {
-		numDot = numberElement;
+	if (totalDot <= 0 ) {
+		totalDot = totalSlides;
 	}else{
-		numDot --;
+		totalDot --;
 	}
-	updateSlider(numDot);
+	updateSlider(totalDot);
 });
 
 
-//Controle de la flèche droit
+//Passer au slide suivant avec la flèche
 
 arrowRight.addEventListener("click" , () => {
-	if (numDot >= numberElement) {
-		numDot = 0; 
+	if (totalDot >= totalSlides) {
+		totalDot = 0; 
 	}else{
-		numDot ++;
+		totalDot ++;
 	}
-	updateSlider(numDot);
+	updateSlider(totalDot);
 });
 
 }
