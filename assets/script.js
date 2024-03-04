@@ -54,8 +54,8 @@ arrowLeft.classList.remove("hidden");
 arrowRight.classList.remove("hidden");
 
 //Mise en Place des dots de sélection
-for(let pas = 0; pas <= totalSlides; pas++) {
-	dots.innerHTML += '<span id="dot' + pas + '"class = "dot" title = "Image' + (pas + 1) +'" ></span>';
+for(let ads = 0; ads <= totalSlides; ads++) {
+	dots.innerHTML += '<span id="dot' + ads + '"class = "dot" title = "Image' + (ads + 1) +'" ></span>';
 }
 
 
@@ -66,11 +66,11 @@ On crée un cercle plein pour le point qui est actif
 et on vide aux cercles  pour les autres points
 */
 const addSelected = () => {
-	for(let pas = 0; pas <= totalSlides; pas++ ) {
-		if ( pas === totalDot) {
-			dotList[pas].classList.add("dot_selected");
+	for(let ads = 0; ads <= totalSlides; ads++ ) {
+		if ( ads === totalDot) {
+			dotList[ads].classList.add("dot_selected");
 		}else{
-			dotList[pas].classList.remove("dot_selected");
+			dotList[ads].classList.remove("dot_selected");
 		}
 	}
 };
@@ -85,7 +85,7 @@ const updateSlider = (arg) => {
 }
 
 
-//Mise en place de l'image de départ du slider avec le texte
+//Définir l'image initiale du Carrousel avec du texte
 updateSlider(totalDot);
 
 /*
