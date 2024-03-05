@@ -1,129 +1,90 @@
-//Différer le lancement du script => ne se lance qu'une fois que tout le HTML a été chargé
-
-if (document.readyState === "complete") {
-	monScript();
-}else{
-	document.addEventListener("DOMContentLoaded", function () {
-		monScript();
-	});
-}
-
-function monScript() {
-	console.log("HTML ready!..");
-
 
 const slides = [
-	{
-		"image":"slide1.jpg",
-		"tagLine":"Impressions tous formats <span>en boutique et en ligne</span>"
-	},
-	{
-		"image":"slide2.jpg",
-		"tagLine":"Tirages haute définition grand format <span>pour vos bureaux et events</span>"
-	},
-	{
-		"image":"slide3.jpg",
-		"tagLine":"Grand choix de couleurs <span>de CMJN aux pantones</span>"
-	},
-	{
-		"image":"slide4.png",
-		"tagLine":"Autocollants <span>avec découpe laser sur mesure</span>"
-	}
-]
+    {
+        "image": "./assets/images/slideshow/slide1.jpg",
+        "tagLine": "Impressions tous formats <span>en boutique et en ligne</span>"
+    },
+    {
+        "image": "./assets/images/slideshow/slide2.jpg",
+        "tagLine": "Tirages haute définition grand format <span>pour vos bureaux et events</span>"
+    },
+    {
+        "image": "./assets/images/slideshow/slide3.jpg",
+        "tagLine": "Grand choix de couleurs <span>de CMJN aux pantones</span>"
+    },
+    {
+        "image": "./assets/images/slideshow/slide4.png",
+        "tagLine": "Autocollants <span>avec découpe laser sur mesure</span>"
+    }
+];
 
-// Les variables nécessaires pour le carrousel
-
-//Calculer de nombre d'élements pour le carrousel
-let totalSlides = slides.length -1; 
-
-//Position de départ du carrousel
-let totalDot = 0; 
-
-//Emplacement des images
-let srcImage = "./assets/images/slideshow/";
 
 //On definit les éléments de carrousel
-const bannerImg  = document.querySelector(".banner-img");
-const bannerText = document.querySelector(".banner-text");
-const arrowLeft  = document.querySelector(".arrow_left");
-const arrowRight = document.querySelector(".arrow_right");
-const dots 		 = document.querySelector(".dots");
+const totalSlides = slides.length;
+let currentSlide = 0;
+const banner = document.getElementById('banner');
+const bannerImg = banner.querySelector('.banner-img');
+const bannerText = banner.querySelector('.banner-text');
+const dotsContainer = banner.querySelector('.dots');
 
-//Le script est lancé , on fait afficher les flêches
-arrowLeft.classList.remove("hidden");
-arrowRight.classList.remove("hidden");
-
-//Mise en Place des dots de sélection
-for(let ads = 0; ads <= totalSlides; ads++) {
-	dots.innerHTML += '<span id="dot' + ads + '"class = "dot" title = "Image' + (ads + 1) +'" ></span>';
+//Mettre à jour des points  de Carrousel
+function updateDots() {
+    dotsContainer.innerHTML = '';
+    for (let i = 0; i < totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.classList.add('dot');
+        if (i === currentSlide) {
+            dot.classList.add('dot_selected');
+        }
+        dotsContainer.appendChild(dot);
+    }
 }
 
-
-//On place dans une liste tous les élements ayant la class dot
-const dotList = document.querySelectorAll(".dot");
-/*
-On crée un cercle plein pour le point qui est actif 
-et on vide aux cercles  pour les autres points
-*/
-const addSelected = () => {
-	for(let ads = 0; ads <= totalSlides; ads++ ) {
-		if ( ads === totalDot) {
-			dotList[ads].classList.add("dot_selected");
-		}else{
-			dotList[ads].classList.remove("dot_selected");
-		}
-	}
-};
-
-
-//Selection du Dot actif en chargement de l'image avec le texte
-const updateSlider = (arg) => {
-	bannerImg.src 		 = srcImage + slides[arg]["image"];
-	bannerImg.alt 		 = "Banner Print-it- " + slides[arg]["image"];
-	bannerText.innerHTML = slides[arg]["tagLine"];
-	addSelected(); 
+//Mettre à jour du slader
+function updateSlide() {
+    const slide = slides[currentSlide];
+    bannerImg.src = slide.image;
+    bannerText.innerHTML = slide.tagLine;
+    updateDots();
 }
 
-
-//Définir l'image initiale du Carrousel avec du texte
-updateSlider(totalDot);
-
-/*
-Dans la liste des éléments "dot", nous obtenons l'identifiant trouvé 
-dans la target et obtenons uniquement la dernière valeur qui est le numéro du "dot".
-*/
-
-dots.addEventListener("click", (e) => {
-	if (e.target.id != "" && e.target.id != null ) {
-		totalDot = parseInt(e.target.id.substring(3));
-	}
-	updateSlider(totalDot);
-});
+//Passer à la slide suivante avec la flèche
+function nextSlide() {
+    if (currentSlide === totalSlides - 1) {
+        currentSlide = 0; // passer la pemière slide
+    } else {
+        currentSlide++; // Passer à la slide suivante
+    }
+    updateSlide();
+}
 
 // Passer au slide précédente avec la flèche
-
-arrowLeft.addEventListener("click", () => {
-	if (totalDot <= 0 ) {
-		totalDot = totalSlides;
-	}else{
-		totalDot --;
-	}
-	updateSlider(totalDot);
-});
-
-
-//Passer au slide suivant avec la flèche
-
-arrowRight.addEventListener("click" , () => {
-	if (totalDot >= totalSlides) {
-		totalDot = 0; 
-	}else{
-		totalDot ++;
-	}
-	updateSlider(totalDot);
-});
-
+function prevSlide() {
+    if (currentSlide === 0) {
+        currentSlide = totalSlides - 1; // Passer à la slide dernière
+    } else {
+        currentSlide--; // Passer à la slide précédente
+    }
+    updateSlide();
 }
 
+//Mettre les événement 'click' sur les Flèches
+const prevButton = banner.querySelector('.arrow_left');
+const nextButton = banner.querySelector('.arrow_right');
 
+prevButton.addEventListener('click', prevSlide);
+nextButton.addEventListener('click', nextSlide);
+
+//Charger le premier slide
+updateSlide();
+
+
+// Ajouter des événements de clic aux points
+dotsContainer.addEventListener('click', function(event) {
+    if (event.target.classList.contains('dot')) {
+        const index = Array.from(dotsContainer.children).indexOf(event.target);
+        currentSlide = index;
+        updateSlide();
+    }
+});
 
