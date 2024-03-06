@@ -40,6 +40,15 @@ function updateDots() {
     }
 }
 
+// Ajouter des événements de clic aux points
+dotsContainer.addEventListener('click', function(event) {
+    if (event.target.classList.contains('dot')) {
+        const index = Array.from(dotsContainer.children).indexOf(event.target);
+        currentSlide = index;
+        updateSlide();
+    }
+});
+
 //Mettre à jour du slader
 function updateSlide() {
     const slide = slides[currentSlide];
@@ -79,12 +88,5 @@ nextButton.addEventListener('click', nextSlide);
 updateSlide();
 
 
-// Ajouter des événements de clic aux points
-dotsContainer.addEventListener('click', function(event) {
-    if (event.target.classList.contains('dot')) {
-        const index = Array.from(dotsContainer.children).indexOf(event.target);
-        currentSlide = index;
-        updateSlide();
-    }
-});
+
 
